@@ -4,22 +4,23 @@ class Amigo:
 	def __init__(self, nombre, puntuaciones=None, genero="M", categoria=None):
 		"""
 		:param nombre: Nombre del amigo.
-		:param puntuaciones: Diccionario con las puntuaciones; si no se proporciona se inicializa en 0.
+		:param puntuaciones: Diccionario con 10 puntuaciones; si no se proporciona se inicializa en 0.
 		:param genero: 'M' para Hombre o 'F' para Mujer. Por defecto es 'M'.
 		:param categoria: Categoría del amigo; si no se especifica se asigna "Desconocido".
 		"""
 		self.nombre = nombre.strip()
+		# Usamos los 10 criterios alternativos
 		self.puntuaciones = puntuaciones if puntuaciones else {
-			"tiempo_compartido": 0,
-			"apoyo_emocional": 0,
-			"intereses_comunes": 0,
-			"frecuencia_comunicacion": 0,
+			"empatia_calidez": 0,
 			"confianza": 0,
 			"reciprocidad": 0,
+			"intereses_compartidos": 0,
+			"disponibilidad_presencia": 0,
+			"comunicacion_efectiva": 0,
+			"apoyo_dificultades": 0,
 			"resolucion_conflictos": 0,
-			"inversion_personal": 0,
-			"comprension_mutua": 0,
-			"diversion_compartida": 0
+			"diversion_recreacion": 0,
+			"crecimiento_personal": 0
 		}
 		# Normalizamos: si se recibe "H" se trata como "M"
 		gen = genero.upper().strip()
@@ -37,7 +38,7 @@ class Amigo:
 		self.clasificar_amigo()
 
 	def clasificar_amigo(self):
-		"""Clasifica al amigo en una categoría basada en su puntuación total."""
+		"""Clasifica al amigo en una categoría basada en la suma total de sus puntuaciones."""
 		puntuacion_total = sum(self.puntuaciones.values())
 		if puntuacion_total > 90:
 			self.categoria = "Súper Amigo"
@@ -69,9 +70,11 @@ class Amigo:
 	def __str__(self):
 		detalles = f"Nombre: {self.nombre}\n"
 		detalles += f"Género: {'Hombre' if self.genero == 'M' else 'Mujer'}\n"
-		detalles += "\n".join([f"{clave.replace('_', ' ').title()}: {valor}" 
-							   for clave, valor in self.puntuaciones.items()])
-		detalles += f"\nCategoría: {self.categoria}\n"
+		# Presenta cada criterio con una etiqueta clara
+		for clave, valor in self.puntuaciones.items():
+			# Se reemplazan guiones bajos por espacios y se capitaliza
+			detalles += f"{clave.replace('_',' ').title()}: {valor}\n"
+		detalles += f"Categoría: {self.categoria}\n"
 		return detalles
 
 	def to_line(self):
@@ -89,8 +92,8 @@ class Amigo:
 		Se espera que la línea tenga:
 		 - 13 campos: [nombre, 10 puntuaciones, género, categoría]  
 		 o  
-		 - 12 campos: [nombre, 10 puntuaciones, género+categoría]
-		   en cuyo caso se toma el primer carácter como género (y se normaliza: "H"→"M")
+		 - 12 campos: [nombre, 10 puntuaciones, género+categoría],
+		   en cuyo caso se toma el primer carácter como género (con "H" convertido a "M")
 		   y el resto como categoría.
 		"""
 		parts = line.strip().split(',')
@@ -98,37 +101,36 @@ class Amigo:
 			nombre = parts[0]
 			scores = list(map(int, parts[1:11]))
 			puntuaciones = {
-				"tiempo_compartido": scores[0],
-				"apoyo_emocional": scores[1],
-				"intereses_comunes": scores[2],
-				"frecuencia_comunicacion": scores[3],
-				"confianza": scores[4],
-				"reciprocidad": scores[5],
-				"resolucion_conflictos": scores[6],
-				"inversion_personal": scores[7],
-				"comprension_mutua": scores[8],
-				"diversion_compartida": scores[9]
+				"empatia_calidez": scores[0],
+				"confianza": scores[1],
+				"reciprocidad": scores[2],
+				"intereses_compartidos": scores[3],
+				"disponibilidad_presencia": scores[4],
+				"comunicacion_efectiva": scores[5],
+				"apoyo_dificultades": scores[6],
+				"resolucion_conflictos": scores[7],
+				"diversion_recreacion": scores[8],
+				"crecimiento_personal": scores[9]
 			}
 			gen = parts[11].upper().strip()
-			if gen == "H":  # convertir "H" a "M"
+			if gen == "H":
 				gen = "M"
 			categoria = parts[12]
 		elif len(parts) == 12:
 			nombre = parts[0]
 			scores = list(map(int, parts[1:11]))
 			puntuaciones = {
-				"tiempo_compartido": scores[0],
-				"apoyo_emocional": scores[1],
-				"intereses_comunes": scores[2],
-				"frecuencia_comunicacion": scores[3],
-				"confianza": scores[4],
-				"reciprocidad": scores[5],
-				"resolucion_conflictos": scores[6],
-				"inversion_personal": scores[7],
-				"comprension_mutua": scores[8],
-				"diversion_compartida": scores[9]
+				"empatia_calidez": scores[0],
+				"confianza": scores[1],
+				"reciprocidad": scores[2],
+				"intereses_compartidos": scores[3],
+				"disponibilidad_presencia": scores[4],
+				"comunicacion_efectiva": scores[5],
+				"apoyo_dificultades": scores[6],
+				"resolucion_conflictos": scores[7],
+				"diversion_recreacion": scores[8],
+				"crecimiento_personal": scores[9]
 			}
-			# El campo 11 contiene género seguido de la categoría, ej. "MTerciario"
 			campo = parts[11].strip()
 			if campo:
 				gen = campo[0].upper()
