@@ -4,7 +4,7 @@ import wx
 
 class AmigoDialog(wx.Dialog):
 	def __init__(self, parent, title="Agregar Amigo"):
-		super(AmigoDialog, self).__init__(parent, title=title, size=(300, 500))
+		super(AmigoDialog, self).__init__(parent, title=title, size=(300, 550))
 		
 		self.panel = wx.Panel(self)
 		self.main_sizer = wx.BoxSizer(wx.VERTICAL)
@@ -21,18 +21,27 @@ class AmigoDialog(wx.Dialog):
 		self.main_sizer.Add(self.genero_choice, 0, wx.EXPAND | wx.ALL, 5)
 		
 		# Diccionario para almacenar los TextCtrls de las puntuaciones
+		# Se usan 10 criterios nuevos
 		self.puntuaciones_ctrls = {}
 		self.lista_puntuaciones = [
-			"tiempo_compartido", "apoyo_emocional", "intereses_comunes",
-			"frecuencia_comunicacion", "confianza", "reciprocidad", 
-			"resolucion_conflictos", "inversion_personal", "comprension_mutua", 
-			"diversion_compartida"
+			"empatia_calidez",		 # Mide la capacidad para ponerse en tu lugar y transmitir calidez
+			"confianza",			   # Evalúa cuán confiable es la persona para compartir aspectos personales
+			"reciprocidad",			# Mide el equilibrio en el dar y recibir apoyo
+			"intereses_compartidos",   # Evalúa la coincidencia en hobbies, valores o actividades
+			"disponibilidad_presencia",# Considera la facilidad de contar con su presencia
+			"comunicacion_efectiva",   # Mide la claridad y calidad de la comunicación
+			"apoyo_dificultades",	  # Evalúa el soporte brindado en momentos críticos
+			"resolucion_conflictos",   # Mide la capacidad para resolver desacuerdos de forma constructiva
+			"diversion_recreacion",	# Evalúa si la amistad genera momentos divertidos y de esparcimiento
+			"crecimiento_personal"	 # Mide si la relación inspira o fomenta el desarrollo personal
 		]
 		
-		for puntuacion in self.lista_puntuaciones:
-			wx.StaticText(self.panel, label=puntuacion.replace("_", " ").title() + ":")
+		for criterio in self.lista_puntuaciones:
+			# Crear una etiqueta más amigable: convertir "_" en espacios y formatear en Title Case
+			label = criterio.replace("_", " ").title()
+			wx.StaticText(self.panel, label=label + ":")
 			ctrl = wx.TextCtrl(self.panel)
-			self.puntuaciones_ctrls[puntuacion] = ctrl
+			self.puntuaciones_ctrls[criterio] = ctrl
 			self.main_sizer.Add(ctrl, 0, wx.EXPAND | wx.ALL, 5)
 		
 		# Botón para aceptar y validar las entradas (con atajo)
@@ -55,6 +64,7 @@ class AmigoDialog(wx.Dialog):
 				raise ValueError("El nombre no puede estar vacío.")
 			if self.genero_choice.GetSelection() == wx.NOT_FOUND:
 				raise ValueError("Debe seleccionar un género.")
+			# Convertir los valores de los campos de puntuaciones a enteros
 			puntuaciones = {key: int(ctrl.GetValue()) for key, ctrl in self.puntuaciones_ctrls.items()}
 			if not all(1 <= p <= 10 for p in puntuaciones.values()):
 				raise ValueError("Las puntuaciones deben estar entre 1 y 10.")

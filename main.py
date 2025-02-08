@@ -14,6 +14,7 @@ class AmigosApp(wx.Frame):
 	
 	def InitUI(self):
 		panel = wx.Panel(self)  # No se incluye el filtro en la principal
+		# Crear un sizer vertical para organizar los widgets en el panel
 		sizer = wx.BoxSizer(wx.VERTICAL)
 		
 		# Botón para agregar un nuevo amigo (con atajo)
