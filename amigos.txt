@@ -21,3 +21,4 @@ Azerete,7,7,7,7,7,7,7,7,7,7,F,Secundario
 Laucito,9,10,9,8,10,9,9,9,9,9,F,Súper Amigo
 yari,5,4,5,4,4,5,5,5,5,7,F,Terciario
 mili,9,7,7,6,6,6,6,6,6,6,F,Secundario
+Elia,6,6,7,6,6,6,6,6,5,4,F,Terciario
