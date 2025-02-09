@@ -50,7 +50,7 @@ class ReevaluarAmigoDialog(wx.Dialog):
 			self.lista_puntuaciones = criterios
 		for clave in self.lista_puntuaciones:
 			wx.StaticText(self.panel, label=clave + ":")
-			ctrl = wx.TextCtrl(self.panel)
+			ctrl = wx.SpinCtrl(self.panel, value="0", min=0, max=10)
 			self.puntuaciones_ctrls[clave] = ctrl
 			self.main_sizer.Add(ctrl, 0, wx.EXPAND | wx.ALL, 5)
 		
@@ -141,7 +141,7 @@ class ReevaluarAmigoDialog(wx.Dialog):
 		if cur_gen != self.original_genero:
 			return True
 		for clave, ctrl in self.puntuaciones_ctrls.items():
-			if ctrl.GetValue().strip() != self.original_puntuaciones.get(clave, ""):
+			if ctrl.GetValue() != self.original_puntuaciones.get(clave, ""):
 				return True
 		return False
 	
@@ -158,7 +158,7 @@ class ReevaluarAmigoDialog(wx.Dialog):
 			nuevas_puntuaciones = {}
 			for clave, ctrl in self.puntuaciones_ctrls.items():
 				try:
-					valor = int(ctrl.GetValue())
+					valor  =ctrl.GetValue()
 				except ValueError:
 					raise ValueError(f"El valor de '{clave}' debe ser un número entero.")
 				nuevas_puntuaciones[clave] = valor

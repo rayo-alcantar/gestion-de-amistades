@@ -30,7 +30,7 @@ class AmigoDialog(wx.Dialog):
 		for criterio in self.lista_puntuaciones:
 			# Se muestra el texto del criterio tal como aparece en el archivo
 			wx.StaticText(self.panel, label=criterio + ":")
-			ctrl = wx.TextCtrl(self.panel)
+			ctrl = wx.SpinCtrl(self.panel, value="0", min=0, max=10)
 			self.puntuaciones_ctrls[criterio] = ctrl
 			self.main_sizer.Add(ctrl, 0, wx.EXPAND | wx.ALL, 5)
 		
