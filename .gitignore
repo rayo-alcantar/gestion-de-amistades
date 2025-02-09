@@ -2,5 +2,7 @@ dist/
 build/
 .venv/
 __pycache__/
-*.txt
+criterios.txt
+
+amigos.txt
 
