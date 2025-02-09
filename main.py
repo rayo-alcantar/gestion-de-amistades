@@ -222,6 +222,13 @@ class AmigosApp(wx.Frame):
 def main():
 	# Se inicializa la aplicación de wxPython primero para poder mostrar mensajes con wx.MessageBox.
 	app = wx.App()
+	# Verificar si ya hay una instancia ejecutándose
+	name = "manage-friends-Instance"  # Identificador para la aplicación
+	instance = wx.SingleInstanceChecker(name)
+	if instance.IsAnotherRunning():
+		wx.MessageBox("el gestor de amistades ya está en ejecución.", "Aviso", wx.ICON_INFORMATION)
+		return False
+
 
 	criterios, hubo_problema = cargar_criterios()
 
