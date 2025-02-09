@@ -4,8 +4,9 @@ import os
 from amigo import Amigo
 
 class CirculoAmistad:
-	def __init__(self, nombre_archivo='amigos.txt'):
+	def __init__(self, nombre_archivo='amigos.txt', criterios=None):
 		self.nombre_archivo = nombre_archivo
+		self.criterios = criterios
 		self.amigos = self.cargar_amigos()
 
 	def cargar_amigos(self):
@@ -15,7 +16,7 @@ class CirculoAmistad:
 			with open(self.nombre_archivo, 'r', encoding='latin-1') as archivo:
 				for linea in archivo:
 					try:
-						amigos.append(Amigo.from_line(linea))
+						amigos.append(Amigo.from_line(linea, self.criterios))
 					except ValueError as e:
 						print(f"Error al procesar una línea: {e}")
 		return amigos
@@ -29,25 +30,10 @@ class CirculoAmistad:
 	def agregar_amigo(self, nombre, puntuaciones, genero="M"):
 		"""
 		Agrega un nuevo amigo al círculo y lo guarda.
-		
 		Se espera que el diccionario 'puntuaciones' tenga exactamente 10 claves,
-		correspondientes a los siguientes criterios (evaluados del 1 al 10):
-		
-		  1. empatía_calidez  
-		  2. confianza  
-		  3. reciprocidad  
-		  4. intereses_compartidos  
-		  5. disponibilidad_presencia  
-		  6. comunicacion_efectiva  
-		  7. apoyo_dificultades  
-		  8. resolucion_conflictos  
-		  9. diversion_recreacion  
-		  10. crecimiento_personal
-		  
-		Estos criterios buscan abarcar aspectos emocionales, prácticos y de crecimiento personal,
-		de modo que la evaluación sea lo más completa y diferenciada posible.
+		correspondientes a las criterios de evaluación.
 		"""
-		nuevo_amigo = Amigo(nombre, puntuaciones, genero)
+		nuevo_amigo = Amigo(nombre, puntuaciones, genero, criterios=self.criterios)
 		self.amigos.append(nuevo_amigo)
 		self.guardar_amigos()
 

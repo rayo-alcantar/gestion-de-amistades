@@ -3,7 +3,7 @@
 import wx
 
 class AmigoDialog(wx.Dialog):
-	def __init__(self, parent, title="Agregar Amigo"):
+	def __init__(self, parent, title="Agregar Amigo", criterios=None):
 		super(AmigoDialog, self).__init__(parent, title=title, size=(300, 550))
 		
 		self.panel = wx.Panel(self)
@@ -21,25 +21,15 @@ class AmigoDialog(wx.Dialog):
 		self.main_sizer.Add(self.genero_choice, 0, wx.EXPAND | wx.ALL, 5)
 		
 		# Diccionario para almacenar los TextCtrls de las puntuaciones
-		# Se usan 10 criterios nuevos
 		self.puntuaciones_ctrls = {}
-		self.lista_puntuaciones = [
-			"empatia_calidez",		 # Mide la capacidad para ponerse en tu lugar y transmitir calidez
-			"confianza",			   # Evalúa cuán confiable es la persona para compartir aspectos personales
-			"reciprocidad",			# Mide el equilibrio en el dar y recibir apoyo
-			"intereses_compartidos",   # Evalúa la coincidencia en hobbies, valores o actividades
-			"disponibilidad_presencia",# Considera la facilidad de contar con su presencia
-			"comunicacion_efectiva",   # Mide la claridad y calidad de la comunicación
-			"apoyo_dificultades",	  # Evalúa el soporte brindado en momentos críticos
-			"resolucion_conflictos",   # Mide la capacidad para resolver desacuerdos de forma constructiva
-			"diversion_recreacion",	# Evalúa si la amistad genera momentos divertidos y de esparcimiento
-			"crecimiento_personal"	 # Mide si la relación inspira o fomenta el desarrollo personal
-		]
+		if criterios is None:
+			self.lista_puntuaciones = []
+		else:
+			self.lista_puntuaciones = criterios
 		
 		for criterio in self.lista_puntuaciones:
-			# Crear una etiqueta más amigable: convertir "_" en espacios y formatear en Title Case
-			label = criterio.replace("_", " ").title()
-			wx.StaticText(self.panel, label=label + ":")
+			# Se muestra el texto del criterio tal como aparece en el archivo
+			wx.StaticText(self.panel, label=criterio + ":")
 			ctrl = wx.TextCtrl(self.panel)
 			self.puntuaciones_ctrls[criterio] = ctrl
 			self.main_sizer.Add(ctrl, 0, wx.EXPAND | wx.ALL, 5)

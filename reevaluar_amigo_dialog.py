@@ -1,11 +1,13 @@
-﻿#revaluar amigo 
+﻿# reevaluar_amigo_dialog.py
+
 import wx
 
 class ReevaluarAmigoDialog(wx.Dialog):
-	def __init__(self, parent, circulo, title="Reevaluar Amigo"):
+	def __init__(self, parent, circulo, title="Reevaluar Amigo", criterios=None):
 		super(ReevaluarAmigoDialog, self).__init__(parent, title=title, size=(350, 600))
 		
 		self.circulo = circulo
+		self.criterios = criterios
 		self.panel = wx.Panel(self, style=wx.TAB_TRAVERSAL)
 		self.main_sizer = wx.BoxSizer(wx.VERTICAL)
 		
@@ -40,15 +42,14 @@ class ReevaluarAmigoDialog(wx.Dialog):
 		self.genero_choice = wx.Choice(self.panel, choices=["Hombre", "Mujer"])
 		self.main_sizer.Add(self.genero_choice, 0, wx.EXPAND | wx.ALL, 5)
 		
-		# Campos para las 10 puntuaciones usando los nuevos criterios
+		# Campos para las 10 puntuaciones utilizando las criterios proporcionadas
 		self.puntuaciones_ctrls = {}
-		self.lista_puntuaciones = [
-			"empatia_calidez", "confianza", "reciprocidad", "intereses_compartidos",
-			"disponibilidad_presencia", "comunicacion_efectiva", "apoyo_dificultades",
-			"resolucion_conflictos", "diversion_recreacion", "crecimiento_personal"
-		]
+		if criterios is None:
+			self.lista_puntuaciones = []
+		else:
+			self.lista_puntuaciones = criterios
 		for clave in self.lista_puntuaciones:
-			wx.StaticText(self.panel, label=clave.replace('_',' ').title() + ":")
+			wx.StaticText(self.panel, label=clave + ":")
 			ctrl = wx.TextCtrl(self.panel)
 			self.puntuaciones_ctrls[clave] = ctrl
 			self.main_sizer.Add(ctrl, 0, wx.EXPAND | wx.ALL, 5)
@@ -129,7 +130,7 @@ class ReevaluarAmigoDialog(wx.Dialog):
 		detalle += f"Género: {'Hombre' if amigo.genero=='M' else 'Mujer'}\n"
 		detalle += "Puntuaciones:\n"
 		for clave in self.lista_puntuaciones:
-			detalle += f"  {clave.replace('_',' ').title()}: {amigo.puntuaciones.get(clave,0)}\n"
+			detalle += f"  {clave}: {amigo.puntuaciones.get(clave,0)}\n"
 		detalle += f"Categoría: {amigo.categoria}"
 		return detalle
 	
@@ -159,7 +160,7 @@ class ReevaluarAmigoDialog(wx.Dialog):
 				try:
 					valor = int(ctrl.GetValue())
 				except ValueError:
-					raise ValueError(f"El valor de '{clave.replace('_',' ')}' debe ser un número entero.")
+					raise ValueError(f"El valor de '{clave}' debe ser un número entero.")
 				nuevas_puntuaciones[clave] = valor
 			if not all(1 <= p <= 10 for p in nuevas_puntuaciones.values()):
 				raise ValueError("Las puntuaciones deben estar entre 1 y 10.")
