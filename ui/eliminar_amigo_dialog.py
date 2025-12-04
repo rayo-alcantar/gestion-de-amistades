@@ -1,4 +1,4 @@
-﻿# eliminar_amigo_dialog.py
+# ui/eliminar_amigo_dialog.py
 
 import wx
 

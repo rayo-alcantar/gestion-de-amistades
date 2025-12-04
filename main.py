@@ -3,9 +3,10 @@
 import wx
 import os
 from circulo_amistad import CirculoAmistad
-from amigo_dialog import AmigoDialog
-from reevaluar_amigo_dialog import ReevaluarAmigoDialog
-from eliminar_amigo_dialog import EliminarAmigoDialog
+from ui.amigo_dialog import AmigoDialog
+from ui.reevaluar_amigo_dialog import ReevaluarAmigoDialog
+from ui.eliminar_amigo_dialog import EliminarAmigoDialog
+from ui.estadisticas_dialog import EstadisticasDialog
 
 def cargar_criterios(nombre_archivo="criterios.txt"):
 	"""
@@ -38,8 +39,13 @@ def cargar_criterios(nombre_archivo="criterios.txt"):
 		return criterios_de_ejemplo, True
 
 	# Si el archivo existe, leerlo.
-	with open(nombre_archivo, 'r', encoding='utf-8') as f:
-		criterios = [linea.strip() for linea in f if linea.strip()]
+	try:
+		with open(nombre_archivo, 'r', encoding='utf-8') as f:
+			criterios = [linea.strip() for linea in f if linea.strip()]
+	except UnicodeDecodeError:
+		# Fallback a latin-1 si falla utf-8
+		with open(nombre_archivo, 'r', encoding='latin-1') as f:
+			criterios = [linea.strip() for linea in f if linea.strip()]
 
 	# Si la cantidad de criterios no es 10, usar los criterios de ejemplo.
 	if len(criterios) != 10:
@@ -55,7 +61,7 @@ class AmigosApp(wx.Frame):
 	Permite agregar, reevaluar/editar, eliminar y mostrar amigos del círculo de amistades.
 	"""
 	def __init__(self, parent, title="Gestión de Amistades", criterios=None):
-		super(AmigosApp, self).__init__(parent, title=title, size=(500, 400))
+		super(AmigosApp, self).__init__(parent, title=title, size=(500, 450))
 		self.criterios = criterios
 		self.circulo = CirculoAmistad(criterios=self.criterios)
 		self.InitUI()
@@ -84,6 +90,11 @@ class AmigosApp(wx.Frame):
 		show_btn = wx.Button(panel, label="&Mostrar Amigos")
 		show_btn.Bind(wx.EVT_BUTTON, self.on_mostrar_amigos)
 		sizer.Add(show_btn, 0, wx.ALL | wx.EXPAND, 5)
+
+		# Botón para ver estadísticas.
+		stats_btn = wx.Button(panel, label="Ver &Estadísticas")
+		stats_btn.Bind(wx.EVT_BUTTON, self.on_ver_estadisticas)
+		sizer.Add(stats_btn, 0, wx.ALL | wx.EXPAND, 5)
 
 		# Botón para salir de la aplicación.
 		exit_btn = wx.Button(panel, label="&Salir")
@@ -212,6 +223,11 @@ class AmigosApp(wx.Frame):
 		# Vincular el botón de cierre para terminar el diálogo.
 		close_btn.Bind(wx.EVT_BUTTON, lambda event: dialog.EndModal(wx.ID_OK))
 
+		dialog.ShowModal()
+		dialog.Destroy()
+
+	def on_ver_estadisticas(self, event):
+		dialog = EstadisticasDialog(self, circulo=self.circulo)
 		dialog.ShowModal()
 		dialog.Destroy()
 

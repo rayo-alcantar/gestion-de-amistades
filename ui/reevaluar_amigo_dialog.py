@@ -1,4 +1,4 @@
-﻿# reevaluar_amigo_dialog.py
+# ui/reevaluar_amigo_dialog.py
 
 import wx
 
@@ -141,7 +141,8 @@ class ReevaluarAmigoDialog(wx.Dialog):
 		if cur_gen != self.original_genero:
 			return True
 		for clave, ctrl in self.puntuaciones_ctrls.items():
-			if ctrl.GetValue() != self.original_puntuaciones.get(clave, ""):
+			# FIX: Cast GetValue() (int) to str to match original_puntuaciones (str)
+			if str(ctrl.GetValue()) != self.original_puntuaciones.get(clave, ""):
 				return True
 		return False
 	

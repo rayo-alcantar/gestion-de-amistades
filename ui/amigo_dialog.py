@@ -1,4 +1,4 @@
-﻿# amigo_dialog.py
+# ui/amigo_dialog.py
 
 import wx
 
